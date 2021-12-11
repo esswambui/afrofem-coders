@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>css-basics</title>
+
+    <!--Custom stylesheet-->
+    <link href="style.css" rel="stylesheet">
+    <!--favicon-->
+    <link rel="icon" type="image/x-icon" href="/images/cssicon.ico">
+    <!--google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia">
+
+    
+
+
+</head>
+<body>
+    <header>
+        <div class="header">
+            <div>
+            <img id="logo" src="./images/csslogo.png" alt="logo with the words CSS" width="50" height="25">
+            </div>
+        </div>
+    </header>
+    <main class="main">
+        <h1>CSS Basics</h1>
+        <hr>
+        <h2>What is CSS?</h2>
+            <P>Like <a href="https://developer.mozilla.org/en-US/docs/Learn/Getting_started_with_the_web/HTML_basics">HTML</a>, CSS is not a programming language. It's not a markup language either. <strong>CSS is a style sheet language.</strong> CSS is what you use to selectively style HTML elements.</P>
+        <h2>Anatomy of a CSS Ruleset</h2>
+        <img class="center" src="./images/cssruleset.png" width="400" height="100" >
+        <h3>What is a Selector?</h3>
+            <p>A Selector defines the element(s) to be styled </p>
+            <h4>Types of selectors</h4>
+            <table>
+                <thead>
+                <tr>
+                    <th>Selector name</th>
+                    <th>What does it select</th>
+                    <th>Example</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Element selector (sometimes called a tag or type selector)</td>
+                    <td>All HTML elements of the specified type.</td>
+                    <td>p
+                        selects <code>&lt;p&gt;</code></td>
+                </tr>
+                <tr>
+                    <td>ID selector</td>
+                    <td>
+                        The element on the page with the specified ID. On a given HTML page,
+                        each id value should be unique.
+                    </td>             
+                    <td>
+                        <code>#my-id</code><br>selects <code>&lt;p id="my-id"&gt;</code> or
+                        <code>&lt;a id="my-id"&gt;</code>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Class selector</td>
+                    <td>
+                      The element(s) on the page with the specified class. Multiple instances
+                      of the same class can appear on a page.
+                    </td>
+                    <td>
+                      <code>.my-class</code><br>selects
+                      <code>&lt;p class="my-class"&gt;</code> and
+                      <code>&lt;a class="my-class"&gt;</code>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Attribute selector</td>
+                    <td>The element(s) on the page with the specified attribute.</td>
+                    <td>
+                        <code>img[src]</code><br>selects
+                        <code>&lt;img src="myimage.png"&gt;</code> but not
+                        <code>&lt;img&gt;</code>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Pseudo-class selector</td>
+                    <td>
+                        The specified element(s), but only when in the specified state. (For
+                        example, when a cursor hovers over a link.)
+                    </td>
+                    <td>
+                        <code>a:hover</code><br>selects <code>&lt;a&gt;</code>, but only when
+                        the mouse pointer is hovering over the link.
+                    </td>
+                </tr>
+            </tbody>
+            </table>
+        <h3>Properties</h3>
+        <p>These are ways in which you can style an HTML element. </p>
+        <h3>Property Value</h3>
+        <p>To the right of the property—after the colon—there is the property value. This chooses one out of many possible appearances for a given property.</p>
+        <h2>Always Remeber</h2>
+        <ul>
+            <li>Apart from the selector, each ruleset must be wrapped in curly braces. ({})</li>
+            <li>Within each declaration, you must use a colon (:) to separate the property from its value or values.</li>
+            <li>Within each declaration, you must use a colon (:) to separate the property from its value or values.</li>
+           
+        </ul>
+    </main>  
+    <footer>
+
+    </footer>
+</body>
+</html>
