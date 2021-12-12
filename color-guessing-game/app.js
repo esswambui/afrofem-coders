@@ -6,13 +6,17 @@ const bButton = document.getElementById('b');
 // array of game levels html collection
 const levels = Array.from(document.getElementsByClassName('mode'));
 
+//array of squares
+const squares = Array.from(document.getElementsByClassName('square'));
+const numSquares = squares.length; 
+
+
 // function to get the selected game level
 let gameLevel = levels.find((level) => {
     let levelClasses = Array.from(level.classList);
     return levelClasses.includes("selected");
 }).innerHTML
 
-const views = Array.from(document.getElementsByClassName('square'));
 
 // Add event listener to each game level
 levels.forEach(level => {
@@ -23,11 +27,45 @@ levels.forEach(level => {
         let gameLevel =this.innerHTML;
       
         if (gameLevel === "Hard") {            
-            views.forEach((square) => square.classList.remove("hidden"))
+            squares.forEach((square) => square.classList.remove("hidden"))
         } else {
-           views.forEach((square) => square.classList.add("square"))
+           squares.forEach((square) => square.classList.add("square"))
         }
      
     })
 });
+
+// function to generate random RGB colors
+function randomRGB () {
+    const red = Math.floor(Math.random () *256);
+    const green = Math.floor(Math.random () *256);
+    const blue = Math.floor(Math.random () *256);
+    const rgbString = "rgb(" + red + "," + green + "," + blue + ")";
+
+    return rgbString;
+}
+function generateRandomColors(genColor){
+    //make an array
+    var arr = []
+    //repeat num times
+    for(var i = 0; i < genColor; i++){
+    // get random color and push into array
+    arr.push(randomColor())
+    }
+    //return that array
+    return arr;
+    }
+// background color to squares
+const startButton = document.getElementById("reset");
+
+startButton.addEventListener("click", function () {
+    	for (let i=0; i<squares.length; i++) {
+
+           
+            const square = squares[i];
+            square.style.backgroundColor = randomRGB();
+        }
+})
+
+var colors = generateRandomColors(numSquares);
 
