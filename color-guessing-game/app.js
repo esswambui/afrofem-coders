@@ -8,8 +8,9 @@ const levels = Array.from(document.getElementsByClassName('mode'));
 
 //array of squares
 const squares = Array.from(document.getElementsByClassName('square'));
-const numSquares = squares.length; 
+let numSquares = squares.length; 
 
+const startButton = document.getElementById('reset');
 
 // function to get the selected game level
 let gameLevel = levels.find((level) => {
@@ -17,6 +18,10 @@ let gameLevel = levels.find((level) => {
     return levelClasses.includes("selected");
 }).innerHTML
 
+// array of randomly generated colors
+let colors = generateRandomColors(numSquares);
+
+var pickedColor = randomColorPick();
 
 // Add event listener to each game level
 levels.forEach(level => {
@@ -35,6 +40,17 @@ levels.forEach(level => {
     })
 });
 
+
+// background color to squares
+startButton.addEventListener("click", function () {
+    	for (let i=0; i<squares.length; i++) {
+            const square = squares[i];
+            square.style.backgroundColor = randomRGB();
+        }
+})
+
+
+
 // function to generate random RGB colors
 function randomRGB () {
     const red = Math.floor(Math.random () *256);
@@ -46,26 +62,20 @@ function randomRGB () {
 }
 function generateRandomColors(genColor){
     //make an array
-    var arr = []
+    let arrColors = []
     //repeat num times
-    for(var i = 0; i < genColor; i++){
+    for(let i = 0; i < genColor; i++){
     // get random color and push into array
-    arr.push(randomColor())
+    arrColors.push(randomRGB())
     }
     //return that array
-    return arr;
+    return arrColors;
     }
-// background color to squares
-const startButton = document.getElementById("reset");
 
-startButton.addEventListener("click", function () {
-    	for (let i=0; i<squares.length; i++) {
-
-           
-            const square = squares[i];
-            square.style.backgroundColor = randomRGB();
+function randomColorPick(){
+        //pick a random number
+        let randomIndex = Math.floor(Math.random() * colors.length)
+        return colors[randomIndex];
         }
-})
 
-var colors = generateRandomColors(numSquares);
-
+    
