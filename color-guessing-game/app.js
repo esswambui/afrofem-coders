@@ -3,12 +3,14 @@ const rButton = document.getElementById('r');
 const gButton = document.getElementById('g');
 const bButton = document.getElementById('b');
 
+let colorDisplay = document.querySelector("#color-display");
+
 // array of game levels html collection
 const levels = Array.from(document.getElementsByClassName('mode'));
 
 //array of squares
-const squares = Array.from(document.getElementsByClassName('square'));
-let numSquares = squares.length; 
+let squares = Array.from(document.getElementsByClassName('square'));
+
 
 const startButton = document.getElementById('reset');
 
@@ -19,7 +21,7 @@ let gameLevel = levels.find((level) => {
 }).innerHTML
 
 // array of randomly generated colors
-let colors = generateRandomColors(numSquares);
+let colors = generateRandomColors(squares.length);
 
 var pickedColor = randomColorPick();
 
@@ -30,12 +32,49 @@ levels.forEach(level => {
         this.classList.add("selected");
 
         let gameLevel =this.innerHTML;
+        console.log(gameLevel)
+        
+
+        switch (gameLevel) {
+            case "Easy":
+                const numSquares = squares.length/2
+                //let slicedSquares = squares.slice(numSquares);
+                //slicedSquares.forEach((square) => square.classList.add("hidden"))
+                colors = generateRandomColors(numSquares);
+                //reset winning color
+                pickedColor = randomColorPick();
+                //change display to show new picked color
+                colorDisplay.textContent = pickedColor;
+                for(let i = 0; i < squares.length; i++){
+                    if(colors[i]){
+                        squares[i].style.background = colors[i];
+                        } else {
+                        //squares[i].className += "hidden";      
+                        squares[i].style.display = "none";                }
+                }                
+                break;
+            case "Hard":
+                //squares.forEach((square) => square.classList.remove("hidden"))
+                const allSquares = squares.length;
+                colors = generateRandomColors(allSquares);
+                //reset winning color
+                pickedColor = randomColorPick();
+                //change display to show new picked color
+                colorDisplay.textContent = pickedColor;
+                for(var i = 0; i < squares.length; i++){
+                    squares[i].style.backgroundColor = colors[i];
+                    squares[i].style.display = "block";
+                   
+                    }
+                break;
+
+        }
       
-        if (gameLevel === "Hard") {            
+        /*if (gameLevel === "Hard") {            
             squares.forEach((square) => square.classList.remove("hidden"))
         } else {
            squares.forEach((square) => square.classList.add("square"))
-        }
+        }*/
      
     })
 });
@@ -60,6 +99,8 @@ function randomRGB () {
 
     return rgbString;
 }
+
+// Add all generated colors to an array
 function generateRandomColors(genColor){
     //make an array
     let arrColors = []
@@ -72,6 +113,7 @@ function generateRandomColors(genColor){
     return arrColors;
     }
 
+// Pick a random color from the array of colors.
 function randomColorPick(){
         //pick a random number
         let randomIndex = Math.floor(Math.random() * colors.length)
