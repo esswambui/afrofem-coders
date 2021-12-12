@@ -82,12 +82,21 @@ levels.forEach(level => {
 
 // background color to squares
 startButton.addEventListener("click", function () {
+        //generate all new colors       
+    colors = generateRandomColors(squares.length);
+    //pick a new random color from array
+    pickedColor = randomColorPick();
+    //change colorDisplay to match picked color
+    colorDisplay.textContent = pickedColor;
+    startButton.textContent = "New Colors";
+    //messageDisplay.textContent = "";
     	for (let i=0; i<squares.length; i++) {
             const square = squares[i];
-            square.style.backgroundColor = randomRGB();
+            square.style.backgroundColor = colors[i];
         }
 })
 
+colorDisplay.textContent = pickedColor;
 
 
 // function to generate random RGB colors
@@ -120,4 +129,4 @@ function randomColorPick(){
         return colors[randomIndex];
         }
 
-    
+        
