@@ -1,7 +1,7 @@
 // color buttons
-const rButton = document.getElementById('r');
-const gButton = document.getElementById('g');
-const bButton = document.getElementById('b');
+const redButton = document.getElementById('r');
+const greenButton = document.getElementById('g');
+const blueButton = document.getElementById('b');
 
 let colorDisplay = document.querySelector("#color-display");
 let messageDisplay = document.querySelector("#message");
@@ -10,10 +10,53 @@ let messageDisplay = document.querySelector("#message");
 const levels = Array.from(document.getElementsByClassName('mode'));
 
 //array of squares
-let squares = Array.from(document.getElementsByClassName('square'));
+const squares = Array.from(document.getElementsByClassName('square'));
 
 
 const startButton = document.getElementById('reset');
+// background color to squares
+startButton.addEventListener("click", function () {
+    //generate all new colors       
+    const colors = generateRandomColors(squares.length);
+    startButton.textContent = "New Colors";
+
+    //messageDisplay.textContent = "";
+    for (let i=0; i<squares.length; i++) {
+        const square = squares[i];
+
+        square.dataset.rgb_value = JSON.stringify(randomRGB())
+        square.style.backgroundColor = setColor(square.dataset.rgb_value);
+        console.log(JSON.parse(square.dataset.rgb_value))
+    }
+
+    const pickedColor = randomColorPick(squares);
+    setHeaderColor(pickedColor);
+    console.log(JSON.parse(pickedColor.dataset.rgb_value))
+//})
+    const correctColor = pickedColor.dataset.rgb_value
+    //for(let i = 0; i < squares.length; i++) {
+    //add click listeners to squares    
+    squares.forEach(square => {
+        square.addEventListener("click", function(){
+         //grab color of clicked square
+        const clickedColor = this.dataset.rgb_value;
+        
+        //compare color to pickedColor
+        console.log(clickedColor, correctColor);
+
+        if(clickedColor == correctColor){
+            messageDisplay.textContent = "Correct!";
+            startButton.textContent = "Play Again?";
+            colorAll(clickedColor);
+        
+         } else {
+            this.style.backgroundColor = "#050505";
+            messageDisplay.textContent = "Try Again";
+            }
+        })
+
+    })      
+})
 
 // function to get the selected game level
 let gameLevel = levels.find((level) => {
@@ -23,8 +66,6 @@ let gameLevel = levels.find((level) => {
 
 // array of randomly generated colors
 let colors = generateRandomColors(squares.length);
-
-let pickedColor = randomColorPick();
 
 // Add event listener to each game level
 levels.forEach(level => {
@@ -71,64 +112,25 @@ levels.forEach(level => {
 
         }
       
-        /*if (gameLevel === "Hard") {            
-            squares.forEach((square) => square.classList.remove("hidden"))
-        } else {
-           squares.forEach((square) => square.classList.add("square"))
-        }*/
-     
+       
     })
 });
 
 
-// background color to squares
-startButton.addEventListener("click", function () {
-        //generate all new colors       
-    colors = generateRandomColors(squares.length);
-    //pick a new random color from array
-    pickedColor = randomColorPick();
-    //change colorDisplay to match picked color
-   // colorDisplay.textContent = pickedColor;
-    startButton.textContent = "New Colors";
-    //messageDisplay.textContent = "";
-    	for (let i=0; i<squares.length; i++) {
-            const square = squares[i];
-            square.style.backgroundColor = colors[i];
-        }
-})
 
-//colorDisplay.textContent = pickedColor;
-
-for(let i = 0; i < squares.length; i++) {
-    //add initial colors to squares
-    //squares[i].style.backgroundColor = colors[i];
-    //add click listeners to squares    
-    squares[i].addEventListener("click", function(){
-    //grab color of clicked square
-    let clickedColor = this.style.backgroundColor;
-    //compare color to pickedColor
-    console.log(clickedColor, pickedColor);
-
-    if(clickedColor == pickedColor){
-        messageDisplay.textContent = "Correct!";
-        startButton.textContent = "Play Again?";
-        colorAll(clickedColor);
-     } else {
-        this.style.backgroundColor = "#232323";
-        messageDisplay.textContent = "Try Again";
-        }
-    }
-    )}
 
 // function to generate random RGB colors
 function randomRGB () {
     const red = Math.floor(Math.random () *256);
     const green = Math.floor(Math.random () *256);
     const blue = Math.floor(Math.random () *256);
-    const rgbString = "rgb(" + red + ", " + green + ", " + blue + ")";
+    const rgbArray = [red,green,blue]
+    
 
-    return rgbString;
+    return rgbArray;
 }
+
+// function to assign a color dataset to each square
 
 // Add all generated colors to an array
 function generateRandomColors(genColor){
@@ -136,26 +138,65 @@ function generateRandomColors(genColor){
     let arrColors = []
     //repeat num times
     for(let i = 0; i < genColor; i++){
+        const rgb = randomRGB()
+        const rgbString = "rgb(" + rgb[0] + ", " + rgb[1] + ", " + rgb[2] + ")";
     // get random color and push into array
-    arrColors.push(randomRGB())
+    arrColors.push(rgbString)
     }
     //return that array
     return arrColors;
     }
 
 // Pick a random color from the array of colors.
-function randomColorPick(){
+function randomColorPick(squares){
         //pick a random number
-        let randomIndex = Math.floor(Math.random() * colors.length)
-        return colors[randomIndex];
+        let randomIndex = Math.floor(Math.random() * squares.length)
+        return squares[randomIndex];
         }
+function setColor(color) {
+    const colors = JSON.parse(color);
+    const [r,g,b] = colors;
+    const rgbString = "rgb(" + r + ", " + g + ", " + b + ")";
+
+    return rgbString;
+
+}
+function setHeaderColor(pickedSquare) {
+   const setElementColor = (rgbValues, element) => {
+        const [r,g,b] = rgbValues;
+        
+        element.style.backgroundColor =  `rgb(${r}, ${g}, ${b})`;
+        element.innerHTML = rgbValues.find((rgbValue) => {
+            return rgbValue > 0;
+        })
+   }
+    const rgbColors = pickedSquare.dataset.rgb_value;
+    const colors = JSON.parse(rgbColors);
+
+    const redBg = [colors[0],0,0];
+    const greenBg = [0,colors[1],0];
+    const blueBg = [0,0,colors[2]];
+
+    setElementColor(redBg,redButton)
+    setElementColor(greenBg,greenButton)
+    setElementColor(blueBg,blueButton)
+}
 
 function colorAll(color){
             //loop through all squares
             for(let i = 0; i < squares.length; i++){
-            //change each color to match given color
-            squares[i].style.background = color;
+               
+                const colors = JSON.parse(color);
+                const [r,g,b] = colors;
+                const rgbString = "rgb(" + r + ", " + g + ", " + b + ")";
+                           
+                
+                //change each color to match given color
+                squares[i].style.backgroundColor = rgbString;
             }
+
+          
+
             }
 
         
