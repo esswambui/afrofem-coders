@@ -1,123 +1,90 @@
+const startButton = document.getElementById('reset');
 // color buttons
 const redButton = document.getElementById('r');
 const greenButton = document.getElementById('g');
 const blueButton = document.getElementById('b');
 
-let colorDisplay = document.querySelector("#color-display");
 let messageDisplay = document.querySelector("#message");
-
-// array of game levels html collection
-const levels = Array.from(document.getElementsByClassName('mode'));
 
 //array of squares
 const squares = Array.from(document.getElementsByClassName('square'));
+const allSquares = squares.length;
+// array of game levels html collection
+const levels = Array.from(document.getElementsByClassName('mode'));
 
-
-const startButton = document.getElementById('reset');
-// background color to squares
-startButton.addEventListener("click", function () {
-    //generate all new colors       
-    const colors = generateRandomColors(squares.length);
-    startButton.textContent = "New Colors";
-
-    //messageDisplay.textContent = "";
-    for (let i=0; i<squares.length; i++) {
-        const square = squares[i];
-
-        square.dataset.rgb_value = JSON.stringify(randomRGB())
-        square.style.backgroundColor = setColor(square.dataset.rgb_value);
-        console.log(JSON.parse(square.dataset.rgb_value))
-    }
-
-    const pickedColor = randomColorPick(squares);
-    setHeaderColor(pickedColor);
-    console.log(JSON.parse(pickedColor.dataset.rgb_value))
-//})
-    const correctColor = pickedColor.dataset.rgb_value
-    //for(let i = 0; i < squares.length; i++) {
-    //add click listeners to squares    
-    squares.forEach(square => {
-        square.addEventListener("click", function(){
-         //grab color of clicked square
-        const clickedColor = this.dataset.rgb_value;
-        
-        //compare color to pickedColor
-        console.log(clickedColor, correctColor);
-
-        if(clickedColor == correctColor){
-            messageDisplay.textContent = "Correct!";
-            startButton.textContent = "Play Again?";
-            colorAll(clickedColor);
-        
-         } else {
-            this.style.backgroundColor = "#050505";
-            messageDisplay.textContent = "Try Again";
-            }
-        })
-
-    })      
-})
-
-// function to get the selected game level
+// get the selected game level
 let gameLevel = levels.find((level) => {
     let levelClasses = Array.from(level.classList);
     return levelClasses.includes("selected");
 }).innerHTML
 
-// array of randomly generated colors
-let colors = generateRandomColors(squares.length);
 
-// Add event listener to each game level
-levels.forEach(level => {
-    level.addEventListener("click", function () {
-        levels.forEach((mode) => mode.classList.remove("selected"))
-        this.classList.add("selected");
+//Add click listener to start button
+startButton.addEventListener("click", function () {
+    // Change the text on start button
+    startButton.textContent = "New Colors";
+    // Generate a color for each square
+    generateColors(squares, allSquares);
+    // Pick color from a rondom square
+    const randomColor = randomColorPick(squares,allSquares);
+    //set colors of each RGB header button
+    setHeaderColor(randomColor);
+    //console.log(JSON.parse(pickedColor.dataset.rgb_value))
 
+    const correctColor = randomColor.dataset.rgb_value;
+    
+    // Add event listener to each game level
+    levels.forEach(level => {
+        level.addEventListener("click", function () {
+            levels.forEach((mode) => mode.classList.remove("selected"))
+                this.classList.add("selected");
+        //String value of clicked level
         let gameLevel =this.innerHTML;
-        console.log(gameLevel)
-        
-
+              
+        //Conditions for each level
+        let pickedColor;
+        let correctColor;
         switch (gameLevel) {
             case "Easy":
-                const numSquares = squares.length/2
-                //let slicedSquares = squares.slice(numSquares);
-                //slicedSquares.forEach((square) => square.classList.add("hidden"))
-                colors = generateRandomColors(numSquares);
-                //reset winning color
-                pickedColor = randomColorPick();
-                //change display to show new picked color
-                //colorDisplay.textContent = pickedColor;
-                for(let i = 0; i < squares.length; i++){
-                    if(colors[i]){
-                        squares[i].style.background = colors[i];
-                        } else {
-                        //squares[i].className += "hidden";      
-                        squares[i].style.display = "none";                }
-                }                
-                break;
-            case "Hard":
-                //squares.forEach((square) => square.classList.remove("hidden"))
-                const allSquares = squares.length;
-                colors = generateRandomColors(allSquares);
-                //reset winning color
-                pickedColor = randomColorPick();
-                //change display to show new picked color
-                //colorDisplay.textContent = pickedColor;
-                for(var i = 0; i < squares.length; i++){
-                    squares[i].style.backgroundColor = colors[i];
-                    squares[i].style.display = "block";
-                   
-                    }
-                break;
+                const halfSquares = squares.length/2
+                //Random colors for first three squares
+                generateColors(squares, halfSquares);
+                  // Pick color from a rondom square
+                pickedColor = randomColorPick(squares,halfSquares);
+                //set colors of each RGB header button
+                 setHeaderColor(pickedColor);
+                //console.log(JSON.parse(pickedColor.dataset.rgb_value))
+               
+                correctColor = pickedColor.dataset.rgb_value;
+                //Hide the bottom row
+                for (let i=halfSquares; i<allSquares; i++) {
+                    squares[i].classList.add("hidden");
+                }    
 
+               squareEventListener(squares,halfSquares,correctColor);
+
+           break;
+           
+           case "Hard" :
+                // Generate a color for each square
+                generateColors(squares, allSquares);
+                // Pick color from a rondom square
+                pickedColor = randomColorPick(squares,allSquares);
+                //set colors of each RGB header button
+                setHeaderColor(pickedColor);
+                //console.log(JSON.parse(pickedColor.dataset.rgb_value))
+
+                correctColor = pickedColor.dataset.rgb_value;
+                squareEventListener(squares,allSquares,correctColor);
+            break;
         }
-      
+             
        
     })
 });
-
-
-
+   squareEventListener(squares,allSquares,correctColor);
+   
+})
 
 // function to generate random RGB colors
 function randomRGB () {
@@ -132,25 +99,11 @@ function randomRGB () {
 
 // function to assign a color dataset to each square
 
-// Add all generated colors to an array
-function generateRandomColors(genColor){
-    //make an array
-    let arrColors = []
-    //repeat num times
-    for(let i = 0; i < genColor; i++){
-        const rgb = randomRGB()
-        const rgbString = "rgb(" + rgb[0] + ", " + rgb[1] + ", " + rgb[2] + ")";
-    // get random color and push into array
-    arrColors.push(rgbString)
-    }
-    //return that array
-    return arrColors;
-    }
 
 // Pick a random color from the array of colors.
-function randomColorPick(squares){
+function randomColorPick(squares,num){
         //pick a random number
-        let randomIndex = Math.floor(Math.random() * squares.length)
+        let randomIndex = Math.floor(Math.random() * num)
         return squares[randomIndex];
         }
 function setColor(color) {
@@ -182,21 +135,53 @@ function setHeaderColor(pickedSquare) {
     setElementColor(blueBg,blueButton)
 }
 
-function colorAll(color){
+function colorAll(color,num){
             //loop through all squares
-            for(let i = 0; i < squares.length; i++){
+            for(let i = 0; i < num; i++){
                
                 const colors = JSON.parse(color);
                 const [r,g,b] = colors;
                 const rgbString = "rgb(" + r + ", " + g + ", " + b + ")";
                            
-                
+                squares[i].classList.remove("hidden"); 
                 //change each color to match given color
                 squares[i].style.backgroundColor = rgbString;
             }
 
-          
+           }
 
+        function generateColors (squaresList,num) {            
+            for (let i=0; i<num; i++) {
+                const square = squaresList[i];
+                square.classList.remove("hidden");
+                //set background-color of each square
+                square.dataset.rgb_value = JSON.stringify(randomRGB())
+                square.style.backgroundColor = setColor(square.dataset.rgb_value);
+                //console.log(JSON.parse(square.dataset.rgb_value))
+                }
+            
+            
+            }
+function squareEventListener(squaresList,num,correctColor) {
+    //add click listeners to squares    
+    squaresList.forEach(square => {
+        square.addEventListener("click", function(){
+         //grab color of clicked square
+        const clickedColor = this.dataset.rgb_value;
+
+        if(clickedColor == correctColor){
+            messageDisplay.textContent = "Correct!";
+            //make background of all squares the correct color
+            colorAll(clickedColor,num);
+            startButton.textContent = "Play Again?";
+        } else {
+            this.classList.add("hidden");
+            messageDisplay.textContent = "Try Again";
             }
 
         
+        })
+
+    })      
+  
+}
