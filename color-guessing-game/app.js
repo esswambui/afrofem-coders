@@ -19,10 +19,10 @@ let gameLevel = levels.find((level) => {
 }).innerHTML
 
 
-//Add click listener to start button
+//Add event listener to start button
 startButton.addEventListener("click", function () {
     // Change the text on start button
-    startButton.textContent = "New Colors";
+    startButton.textContent = "Re-Start";
     // Generate a color for each square
     generateColors(squares, allSquares);
     // Pick color from a rondom square
@@ -62,7 +62,6 @@ startButton.addEventListener("click", function () {
                 }    
 
                squareEventListener(squares,halfSquares,correctColor);
-
            break;
            
            case "Hard" :
@@ -86,6 +85,8 @@ startButton.addEventListener("click", function () {
    
 })
 
+
+
 // function to generate random RGB colors
 function randomRGB () {
     const red = Math.floor(Math.random () *256);
@@ -93,27 +94,26 @@ function randomRGB () {
     const blue = Math.floor(Math.random () *256);
     const rgbArray = [red,green,blue]
     
-
     return rgbArray;
 }
 
-// function to assign a color dataset to each square
-
-
-// Pick a random color from the array of colors.
+// Function to pick a random square from a list of squares.
 function randomColorPick(squares,num){
         //pick a random number
         let randomIndex = Math.floor(Math.random() * num)
         return squares[randomIndex];
         }
+
+// Function to create background color to a square from a HTML Dataset color value
 function setColor(color) {
     const colors = JSON.parse(color);
     const [r,g,b] = colors;
     const rgbString = "rgb(" + r + ", " + g + ", " + b + ")";
 
     return rgbString;
-
 }
+
+// Function to set RGB color values to header elements
 function setHeaderColor(pickedSquare) {
    const setElementColor = (rgbValues, element) => {
         const [r,g,b] = rgbValues;
@@ -135,6 +135,7 @@ function setHeaderColor(pickedSquare) {
     setElementColor(blueBg,blueButton)
 }
 
+// Function to set the same background color to a particular number of squares
 function colorAll(color,num){
             //loop through all squares
             for(let i = 0; i < num; i++){
@@ -150,18 +151,19 @@ function colorAll(color,num){
 
            }
 
-        function generateColors (squaresList,num) {            
-            for (let i=0; i<num; i++) {
-                const square = squaresList[i];
-                square.classList.remove("hidden");
-                //set background-color of each square
-                square.dataset.rgb_value = JSON.stringify(randomRGB())
-                square.style.backgroundColor = setColor(square.dataset.rgb_value);
-                //console.log(JSON.parse(square.dataset.rgb_value))
-                }
-            
-            
-            }
+// Function to set random background colors to a particular number of squares 
+function generateColors (squaresList,num) {            
+    for (let i=0; i<num; i++) {
+        const square = squaresList[i];
+        square.classList.remove("hidden");
+        //set background-color of each square
+        square.dataset.rgb_value = JSON.stringify(randomRGB())
+        square.style.backgroundColor = setColor(square.dataset.rgb_value);
+        //console.log(JSON.parse(square.dataset.rgb_value))
+        }
+    }
+
+// Add event listener to each square   
 function squareEventListener(squaresList,num,correctColor) {
     //add click listeners to squares    
     squaresList.forEach(square => {
@@ -173,15 +175,11 @@ function squareEventListener(squaresList,num,correctColor) {
             messageDisplay.textContent = "Correct!";
             //make background of all squares the correct color
             colorAll(clickedColor,num);
-            startButton.textContent = "Play Again?";
         } else {
             this.classList.add("hidden");
             messageDisplay.textContent = "Try Again";
             }
 
-        
         })
-
-    })      
-  
+    })   
 }
